@@ -6,7 +6,7 @@ pipeline {
     environment {
         TOMCAT_USER = 'ec2-user'
         TOMCAT_HOST = '13.234.77.228'
-        TOMCAT_PATH = '/opt/apache-tomcat-9.0.91/webapps/'
+        TOMCAT_PATH = '/opt/apache-tomcat-9.0.91/webapps/' 
     }
     stages {
         stage('Checkout') {
