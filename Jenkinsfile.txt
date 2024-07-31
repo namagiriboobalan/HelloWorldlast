@@ -14,7 +14,7 @@ pipeline {
                 sh 'mvn clean package'
             }
         }
-        stage('Push') {
+        stage('Push') { 
             steps {
                 echo 'This is Push Stage'
             }
