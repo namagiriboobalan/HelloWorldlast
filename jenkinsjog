@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+    tools {
+        maven 'maven'
+    }
+    environment {
+        ARTIFACTORY_URL = 'http://13.235.2.129:8081/artifactory'
+        ARTIFACTORY_REPO = 'libs-release-local'
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'master', credentialsId: 'github', url: 'https://github.com/namagiriboobalan/HelloWorldlast.git'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'mvn clean install'
+            }
+            post {
+                success {
+                    echo "Archiving the Artifacts"
+                    archiveArtifacts artifacts: '**/target/*.war'
+                }
+            }
+        }
+
+        stage('Upload to Artifactory') {
+            steps {
+                script {
+                    def server = Artifactory.server('jfrog')
+                    def uploadSpec = """{
+                        "files": [{
+                            "pattern": "target/*.war",
+                            "target": "${ARTIFACTORY_REPO}/"
+                        }]
+                    }"""
+                    server.upload(uploadSpec)
+                }
+            }
+        }
+    }
+}
